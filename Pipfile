@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "==2.1.1"
+flask-sqlalchemy = "==2.5.1"
+python-dotenv = "==0.19.2"
+pytest = "==7.1.2"
+gunicorn = "==20.1.0"
+flasgger = "==0.9.5"
+quart = "==0.16.1"
+quart-cors = "==0.3.0"
+gino = "==1.0.1"
+flask-migrate = "==3.1.0"
+jinja2 = "==3.0.3"
+werkzeug = "==2.0.3"
+quart-auth = "*"
+flask_login = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12.2"
