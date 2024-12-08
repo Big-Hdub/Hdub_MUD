@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import asyncio
 from models.user import User
-from db.db import db
+from models.db import db
 import os
 
 load_dotenv()
@@ -15,17 +15,23 @@ print(f"Database URL: {DATABASE_URL}")
 print(f"Schema: {SCHEMA}")
 
 async def seed_users():
-    print("Setting database bind...")
-    await db.set_bind(DATABASE_URL)
-    print("Database bind set.")
+    try:
+        print("Setting database bind...")
+        await db.set_bind(DATABASE_URL)
+        print("Database bind set.")
 
-    print(f"Setting schema to {SCHEMA}...")
-    await db.status(f'SET search_path TO {SCHEMA}')
-    print(f"Schema set to {SCHEMA}.")
+        # Add a delay to ensure the database bind is fully established
+        await asyncio.sleep(1)
 
-    print("Creating all tables...")
-    await db.gino.create_all()
-    print("Tables created.")
+        print(f"Setting schema to {SCHEMA}...")
+        await db.status(f'SET search_path TO {SCHEMA}')
+        print(f"Schema set to {SCHEMA}.")
+
+        print("Creating all tables...")
+        await db.gino.create_all()
+        print("Tables created.")
+    except Exception as e:
+        print(f"Error during database setup: {e}")
 
     # Ensure the database connection is established
     if not db.bind:
@@ -37,6 +43,29 @@ async def seed_users():
 
     # Add a delay to ensure the database bind is fully established
     await asyncio.sleep(1)
+
+    # Check if the Gino engine is initialized
+    if not db.bind:
+        print("Gino engine is not initialized yet.")
+        return
+
+    # Log the bind information again to confirm
+    print(f"Database bind info after delay: {db.bind}")
+
+    # Check the status of the connection pool
+    pool_status = db.bind.raw_pool
+    print(f"Connection pool status: {pool_status}")
+
+    # Log the User model to ensure it is properly imported and initialized
+    print(f"User model: {User}")
+
+    # Check if the User model is properly connected to the database
+    try:
+        await User.query.gino.all()
+        print("User model is properly connected to the database.")
+    except Exception as e:
+        print(f"Error checking User model connection: {e}")
+        return
 
     users = [
         {"username": "user1", "password": "password1", "email": "user1@example.com"},

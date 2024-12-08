@@ -1,9 +1,7 @@
-from gino import Gino
 from werkzeug.security import generate_password_hash, check_password_hash
-from .db import environment, SCHEMA
+from .db import db, SCHEMA
 from sqlalchemy.sql import func
 
-db = Gino()
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -15,6 +13,9 @@ class User(db.Model):
     hashed_password = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime(), nullable=False, default=func.now())
     updated_at = db.Column(db.DateTime(), nullable=False, default=func.now(), onupdate=func.now())
+
+    def __repr__(self):
+        return f"<User id={self.id} user={self.username} email={self.email}>"
 
     @classmethod
     async def create(cls, **kwargs):
