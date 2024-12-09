@@ -1,12 +1,7 @@
-Flask
-Flask-SQLAlchemy
 python-dotenv==1.0.0
 pytest
 gunicorn
-flasgger
 quart-cors==0.1.2
-Flask-Migrate
-Flask-Login
 gino==1.0.1
 quart>=0.15.1
 quart-auth==0.6.0
